@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\PromotionDiscount;
 
 use App\Http\Controllers\Controller;
 use App\Models\PromotionEvent;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -11,6 +12,10 @@ use Illuminate\Support\Facades\Validator;
 
 class PromotionEventController extends Controller
 {
+    public function __construct(private ImageService $imageService)
+    {
+    }
+
     /*
     *  Function to store data event into item promotion_events table
     */
@@ -38,14 +43,7 @@ class PromotionEventController extends Controller
             ]);
         }
         else {
-            // Get the original file name
-            $file = $request->file('image');
-
-            // Generate a unique name for the uploaded file
-            $fileName = $file->hashName();
-
-            // Store the file with the new name
-            $imagePath = $file->storeAs('images/promotion-event', $fileName);
+            $imagePath = $this->imageService->store($request->file('image'), 'images/promotion-event');
 
             $eventCreate = PromotionEvent::create([
                 'event_name' => $request->event_name,

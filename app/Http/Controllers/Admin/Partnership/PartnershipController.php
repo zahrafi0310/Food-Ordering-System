@@ -4,15 +4,19 @@ namespace App\Http\Controllers\Admin\Partnership;
 
 use App\Http\Controllers\Controller;
 use App\Models\Partnership;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class PartnershipController extends Controller
 {
+    public function __construct(private ImageService $imageService)
+    {
+    }
+
     public function index() : View
     {
         $partner = Partnership::all();
@@ -52,14 +56,7 @@ class PartnershipController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        // Get the original file name
-        $file = $request->file('image');
-
-        // Generate a unique name for the uploaded file
-        $fileName = $file->hashName();
-
-        // Store the file with the new name
-        $imagePath = $file->storeAs('images/partnership', $fileName);
+        $imagePath = $this->imageService->store($request->file('image'), 'images/partnership');
 
         $created = Partnership::create([
             'image' => $imagePath,
@@ -105,21 +102,7 @@ class PartnershipController extends Controller
 
             if ($request->hasFile('image')) {
 
-                // check if image path exists then delete the path inside storage
-                $image = $partner->image;
-
-                if ($image) {
-                    Storage::delete($image);
-                }
-
-                // Get the original file name
-                $file = $request->file('image');
-
-                // Generate a unique name for the uploaded file
-                $fileName = $file->hashName();
-
-                // Store the file with the new name
-                $imagePath = $file->storeAs('images/partnership', $fileName);
+                $imagePath = $this->imageService->replace($request->file('image'), 'images/partnership', $partner->image);
 
                 $updateData['image'] = $imagePath;
             }
@@ -159,12 +142,7 @@ class PartnershipController extends Controller
     {
         $partnership = Partnership::findOrFail($id);
 
-        // check if image path exists then delete the path inside storage
-        $image = $partnership->image;
-
-        if ($image) {
-            Storage::delete($image);
-        }
+        $this->imageService->delete($partnership->image);
 
         $partnership->delete();
 

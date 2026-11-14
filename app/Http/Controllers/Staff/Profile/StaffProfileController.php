@@ -4,14 +4,18 @@ namespace App\Http\Controllers\Staff\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class StaffProfileController extends Controller
 {
+    public function __construct(private ImageService $imageService)
+    {
+    }
+
     public function show($id) : View
     {
         $user = User::where('id', $id)->first();
@@ -75,21 +79,7 @@ class StaffProfileController extends Controller
 
             if ($request->hasFile('profile_image')) {
 
-                // check if image path exists then delete the path inside storage
-                $image = $user->photo;
-
-                if ($image) {
-                    Storage::delete($image);
-                }
-
-                // Get the original file name
-                $file = $request->file('profile_image');
-
-                // Generate a unique name for the uploaded file
-                $fileName = $file->hashName();
-
-                // Store the file with the new name
-                $imagePath = $file->storeAs('images/profile', $fileName);
+                $imagePath = $this->imageService->replace($request->file('profile_image'), 'images/profile', $user->photo);
 
                 $updateData['profile_image'] = $imagePath;
             }

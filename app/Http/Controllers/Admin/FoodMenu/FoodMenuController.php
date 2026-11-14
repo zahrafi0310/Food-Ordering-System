@@ -5,15 +5,19 @@ namespace App\Http\Controllers\Admin\FoodMenu;
 use App\Http\Controllers\Controller;
 use App\Models\FoodCategory;
 use App\Models\FoodMenu;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class FoodMenuController extends Controller
 {
+    public function __construct(private ImageService $imageService)
+    {
+    }
+
     public function index() : View
     {
         $food = FoodMenu::paginate(10);
@@ -99,14 +103,7 @@ class FoodMenuController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        // Get the original file name
-        $file = $request->file('image');
-
-        // Generate a unique name for the uploaded file
-        $fileName = $file->hashName();
-
-        // Store the file with the new name
-        $imagePath = $file->storeAs('images/food-menu', $fileName);
+        $imagePath = $this->imageService->store($request->file('image'), 'images/food-menu');
         
         $foodMenu = FoodMenu::create([
             'name' => $request->food_name,
@@ -185,21 +182,7 @@ class FoodMenuController extends Controller
 
             if ($request->hasFile('image')) {
 
-                // check if image path exists then delete the path inside storage
-                $image = $menu->image;
-
-                if ($image) {
-                    Storage::delete($image);
-                }
-
-                // Get the original file name
-                $file = $request->file('image');
-
-                // Generate a unique name for the uploaded file
-                $fileName = $file->hashName();
-
-                // Store the file with the new name
-                $imagePath = $file->storeAs('images/food-menu', $fileName);
+                $imagePath = $this->imageService->replace($request->file('image'), 'images/food-menu', $menu->image);
 
                 $updateData['image'] = $imagePath;
             }
@@ -227,12 +210,7 @@ class FoodMenuController extends Controller
     {
         $menu = FoodMenu::findOrFail($id);
 
-        // check if image path exists then delete the path inside storage
-        $image = $menu->image;
-
-        if ($image) {
-            Storage::delete($image);
-        }
+        $this->imageService->delete($menu->image);
 
         $menu->delete();
 
