@@ -26,4 +26,17 @@ class Controller extends BaseController
 
         return $data;
     }
+
+    protected function applyLikeSearch($query, string $keyword, array $fields)
+    {
+        return $query->where(function ($query) use ($keyword, $fields) {
+            foreach ($fields as $index => $field) {
+                if ($index === 0) {
+                    $query->where($field, 'like', '%' . $keyword . '%');
+                } else {
+                    $query->orWhere($field, 'like', '%' . $keyword . '%');
+                }
+            }
+        });
+    }
 }

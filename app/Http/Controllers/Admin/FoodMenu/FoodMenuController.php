@@ -49,13 +49,17 @@ class FoodMenuController extends Controller
     {
         $keyword = $request->input('search');
 
-        $search = FoodMenu::where(function ($query) use ($keyword) {
-            $query->where('name', 'like', '%' . $keyword . '%')
-            ->orWhere('description', 'like', '%' . $keyword . '%')
-            ->orWhere('price', 'like', '%' . $keyword . '%')
-            ->orWhere('category_id', 'like', '%' . $keyword . '%')
-            ->orWhere('image', 'like', '%' . $keyword . '%');
-        })->paginate(self::PER_PAGE_DEFAULT);
+        $search = $this->applyLikeSearch(
+            FoodMenu::query(),
+            $keyword,
+            [
+                'name',
+                'description',
+                'price',
+                'category_id',
+                'image',
+            ]
+        )->paginate(self::PER_PAGE_DEFAULT);
 
         return view('company.admin.food-menu.index', ['food' => $search]);
     }
@@ -72,11 +76,15 @@ class FoodMenuController extends Controller
     {
         $keyword = $request->input('search');
 
-        $search = FoodCategory::where(function ($query) use ($keyword) {
-            $query->where('name', 'like', '%' . $keyword . '%')
-                ->orWhere('created_at', 'like', '%' . $keyword . '%')
-                ->orWhere('updated_at', 'like', '%' . $keyword . '%');
-        })->paginate(self::PER_PAGE_COMPACT);
+        $search = $this->applyLikeSearch(
+            FoodCategory::query(),
+            $keyword,
+            [
+                'name',
+                'created_at',
+                'updated_at',
+            ]
+        )->paginate(self::PER_PAGE_COMPACT);
 
         Log::info([$keyword, $search]);
 

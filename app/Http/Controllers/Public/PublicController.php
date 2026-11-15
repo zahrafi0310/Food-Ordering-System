@@ -34,9 +34,6 @@ class PublicController extends Controller
         return view('public.home', compact('menu'));
     }
 
-
-
-
     /*
     *  Function to view menu file
     */
@@ -49,10 +46,6 @@ class PublicController extends Controller
         return view('public.menu', compact('menu', 'category'));
     }
 
-
-
-
-
     /*
     *  Function to view about file
     */
@@ -60,11 +53,6 @@ class PublicController extends Controller
     {
         return view('public.about');
     }
-
-
-
-
-
 
     /*
     *  Function to view promotion file
@@ -97,12 +85,6 @@ class PublicController extends Controller
         return view('public.promotion', compact('promotion', 'coupon', 'menu'));
     }
 
-
-
-
-
-
-
     /*
     *  Function to view reservation file
     */
@@ -111,11 +93,6 @@ class PublicController extends Controller
         return view('public.reservation');
     }
 
-
-
-
-
-
     /*
     *  Function to search
     */
@@ -123,23 +100,25 @@ class PublicController extends Controller
     {
         $keyword = $request->input('search');
 
-        $search = FoodMenu::where(function ($query) use ($keyword) {
-            $query->where('name', 'like', '%' . $keyword . '%')
-            ->orWhere('price', 'like', '%' . $keyword . '%')
-            ->orWhereHas('foodCategory', function ($query) use ($keyword) {
-                $query->where('name', 'like', '%' . $keyword . '%');
-            });
-        })->get();
+        $search = $this->applyLikeSearch(
+            FoodMenu::query(),
+            $keyword,
+            [
+                'name',
+                'price',
+            ]
+        );
+
+        $search->orWhereHas('foodCategory', function ($query) use ($keyword) {
+            $query->where('name', 'like', '%' . $keyword . '%');
+        });
+
+        $search = $search->get();
 
         Log::info([$keyword, $search]);
 
         return view('public.menu', ['menu' => $search]);
     }
-
-
-
-
-
 
     /*
     *  Function for add to cart
@@ -167,10 +146,6 @@ class PublicController extends Controller
             'success-message' => 'Your order is being processed. Please wait 15 - 30 minutes for us to prepare your food.',
         ]);
     }
-
-
-
-    
 
     /*
     *  Function for reservation

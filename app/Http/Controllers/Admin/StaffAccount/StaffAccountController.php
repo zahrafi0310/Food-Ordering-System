@@ -32,13 +32,16 @@ class StaffAccountController extends Controller
     {
         $keyword = $request->input('search');
 
-        $search = User::where('role', User::ROLE_STAFF)
-        ->where(function ($query) use ($keyword) {
-            $query->where('staff_id', 'like', '%' . $keyword . '%')
-                ->orWhere('name', 'like', '%' . $keyword . '%')
-                ->orWhere('email', 'like', '%' . $keyword . '%')
-                ->orWhere('phone', 'like', '%' . $keyword . '%');
-        })->paginate(self::PER_PAGE_DEFAULT);
+        $search = $this->applyLikeSearch(
+            User::where('role', User::ROLE_STAFF),
+            $keyword,
+            [
+                'staff_id',
+                'name',
+                'email',
+                'phone',
+            ]
+        )->paginate(self::PER_PAGE_DEFAULT);
 
         Log::info([$keyword, $search]);
 
@@ -68,11 +71,15 @@ class StaffAccountController extends Controller
     {
         $keyword = $request->input('search');
 
-        $search = StaffAccount::where(function ($query) use ($keyword) {
-            $query->where('staff_account_id', 'like', '%' . $keyword . '%')
-            ->orWhere('created_at', 'like', '%' . $keyword . '%')
-            ->orWhere('updated_at', 'like', '%' . $keyword . '%');
-        })->paginate(self::PER_PAGE_COMPACT);
+        $search = $this->applyLikeSearch(
+            StaffAccount::query(),
+            $keyword,
+            [
+                'staff_account_id',
+                'created_at',
+                'updated_at',
+            ]
+        )->paginate(self::PER_PAGE_COMPACT);
 
         Log::info([$keyword, $search]);
 
