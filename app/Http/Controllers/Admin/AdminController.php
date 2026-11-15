@@ -17,7 +17,7 @@ class AdminController extends Controller
 
     public function index() : View
     {
-        $staff = User::where('role', 2)->get();
+        $staff = User::where('role', User::ROLE_STAFF)->get();
 
         $sales = CustomerOrder::where('order_status', OrderStatusEnum::Completed)->sum('order_total_price');
 

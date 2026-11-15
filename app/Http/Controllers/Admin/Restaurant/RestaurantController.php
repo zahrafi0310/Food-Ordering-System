@@ -15,7 +15,7 @@ class RestaurantController extends Controller
 {
     public function index() : View
     {
-        $restaurantItems = RestaurantItem::paginate(10);
+        $restaurantItems = RestaurantItem::paginate(self::PER_PAGE_DEFAULT);
 
         return view('company.admin.restaurant.index', ['restaurantItems' => $restaurantItems]);
     }
@@ -27,7 +27,7 @@ class RestaurantController extends Controller
     */
     public function create() : View
     {
-        $itemCategory = ItemCategory::paginate(5);
+        $itemCategory = ItemCategory::paginate(self::PER_PAGE_COMPACT);
 
         return view('company.admin.restaurant.create', ['itemCategory' => $itemCategory]);
     }

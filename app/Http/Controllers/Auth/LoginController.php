@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +14,11 @@ class LoginController extends Controller
     public function index() : View
     {
         if (Auth::check()) {
-            if (Auth::user()->role == 1) {
+            if (Auth::user()->role == User::ROLE_ADMIN) {
                 return view('company.admin.dashboard');
             }
 
-            if (Auth::user()->role == 2) {
+            if (Auth::user()->role == User::ROLE_STAFF) {
                 return view('company.staff.dashboard');
             }
         }
@@ -38,12 +39,12 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
 
-            if (Auth::user()->role == 1) {
+            if (Auth::user()->role == User::ROLE_ADMIN) {
                 $request->session()->regenerate();
                 return redirect()->route('admin-dashboard')->with('success-message', 'Login Successful.');
             }
             
-            if (Auth::user()->role == 2) {
+            if (Auth::user()->role == User::ROLE_STAFF) {
                 $request->session()->regenerate();
                 return redirect()->route('staff-dashboard')->with('success-message', 'Login Successful.');
             }

@@ -11,7 +11,7 @@ class ReservationController extends Controller
 {
     public function index() : View
     {
-        $reservation = Reservation::paginate(10);
+        $reservation = Reservation::paginate(self::PER_PAGE_DEFAULT);
 
         return view('company.staff.reservation.index', ['reservation' => $reservation]);
     }

@@ -21,6 +21,8 @@ use Illuminate\View\View;
 
 class PublicController extends Controller
 {
+    private const PROMOTION_MIN_PRICE = 27.00;
+
     public function __construct(private OrderService $orderService)
     {
     }
@@ -90,7 +92,7 @@ class PublicController extends Controller
             $coupon[$event->id] = $eventCoupon;
         }
 
-        $menu = FoodMenu::where('price', '>', 27.00)->get();
+        $menu = FoodMenu::where('price', '>', self::PROMOTION_MIN_PRICE)->get();
 
         return view('public.promotion', compact('promotion', 'coupon', 'menu'));
     }

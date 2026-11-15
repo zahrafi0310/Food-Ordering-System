@@ -20,7 +20,7 @@ class FoodMenuController extends Controller
 
     public function index() : View
     {
-        $food = FoodMenu::paginate(10);
+        $food = FoodMenu::paginate(self::PER_PAGE_DEFAULT);
 
         return view('company.admin.food-menu.index', ['food' => $food]);
     }
@@ -33,7 +33,7 @@ class FoodMenuController extends Controller
     */
     public function create() : View
     {
-        $newCategory = FoodCategory::paginate(5);
+        $newCategory = FoodCategory::paginate(self::PER_PAGE_COMPACT);
 
         return view('company.admin.food-menu.create', ['newCategory' => $newCategory]);
     }
@@ -55,7 +55,7 @@ class FoodMenuController extends Controller
             ->orWhere('price', 'like', '%' . $keyword . '%')
             ->orWhere('category_id', 'like', '%' . $keyword . '%')
             ->orWhere('image', 'like', '%' . $keyword . '%');
-        })->paginate(10);
+        })->paginate(self::PER_PAGE_DEFAULT);
 
         return view('company.admin.food-menu.index', ['food' => $search]);
     }
@@ -76,7 +76,7 @@ class FoodMenuController extends Controller
             $query->where('name', 'like', '%' . $keyword . '%')
                 ->orWhere('created_at', 'like', '%' . $keyword . '%')
                 ->orWhere('updated_at', 'like', '%' . $keyword . '%');
-        })->paginate(5);
+        })->paginate(self::PER_PAGE_COMPACT);
 
         Log::info([$keyword, $search]);
 

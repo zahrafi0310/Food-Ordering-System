@@ -17,7 +17,7 @@ class StaffAccountController extends Controller
     {
         // Only show user that is not admin
         // Paginate user table to 8
-        $staff = User::where('role', 2)->paginate(10);
+        $staff = User::where('role', User::ROLE_STAFF)->paginate(self::PER_PAGE_DEFAULT);
 
         return view('company.admin.staff-account.index', ['staff' => $staff]);
     }
@@ -32,13 +32,13 @@ class StaffAccountController extends Controller
     {
         $keyword = $request->input('search');
 
-        $search = User::where('role', 2)
+        $search = User::where('role', User::ROLE_STAFF)
         ->where(function ($query) use ($keyword) {
             $query->where('staff_id', 'like', '%' . $keyword . '%')
                 ->orWhere('name', 'like', '%' . $keyword . '%')
                 ->orWhere('email', 'like', '%' . $keyword . '%')
                 ->orWhere('phone', 'like', '%' . $keyword . '%');
-        })->paginate(10);
+        })->paginate(self::PER_PAGE_DEFAULT);
 
         Log::info([$keyword, $search]);
 
@@ -53,7 +53,7 @@ class StaffAccountController extends Controller
     */
     public function create() : View
     {
-        $staffid = StaffAccount::paginate(5);
+        $staffid = StaffAccount::paginate(self::PER_PAGE_COMPACT);
 
         return view('company.admin.staff-account.create', ['staffid' => $staffid]);
     }
@@ -72,7 +72,7 @@ class StaffAccountController extends Controller
             $query->where('staff_account_id', 'like', '%' . $keyword . '%')
             ->orWhere('created_at', 'like', '%' . $keyword . '%')
             ->orWhere('updated_at', 'like', '%' . $keyword . '%');
-        })->paginate(5);
+        })->paginate(self::PER_PAGE_COMPACT);
 
         Log::info([$keyword, $search]);
 

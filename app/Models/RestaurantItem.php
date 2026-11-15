@@ -10,6 +10,8 @@ class RestaurantItem extends Model
 {
     use HasFactory;
 
+    public const DINING_TABLE_NAME = 'Dining Table';
+
     protected $fillable = [
         'item_name',
         'quantity',

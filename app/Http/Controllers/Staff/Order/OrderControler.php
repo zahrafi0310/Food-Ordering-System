@@ -18,7 +18,7 @@ class OrderControler extends Controller
     public function index() : View
     {
         $order = CustomerOrder::with(['diningTable', 'customerOrderDetail.foodMenu'])
-        ->where('order_status', OrderStatusEnum::Preparing)->paginate(10);
+        ->where('order_status', OrderStatusEnum::Preparing)->paginate(self::PER_PAGE_DEFAULT);
 
         return view('company.staff.order.index', ['customerOrder' => $order]);
     }
@@ -32,7 +32,7 @@ class OrderControler extends Controller
     */
     public function create() : View
     {
-        $table = DiningTable::paginate(10);
+        $table = DiningTable::paginate(self::PER_PAGE_DEFAULT);
 
         return view('company.staff.order.create', ['diningTable' => $table]);
     }
@@ -57,7 +57,7 @@ class OrderControler extends Controller
         // Retrieve a submitted input of table_number
         $validated = $validator->safe()->only('table_number');
 
-        $tableName = 'Dining Table';
+        $tableName = RestaurantItem::DINING_TABLE_NAME;
 
         // Get dining table
         $diningTable = RestaurantItem::where('item_name', 'like', $tableName)->first();

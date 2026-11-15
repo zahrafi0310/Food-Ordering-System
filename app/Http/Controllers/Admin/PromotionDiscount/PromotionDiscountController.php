@@ -17,7 +17,7 @@ class PromotionDiscountController extends Controller
 {
     public function index() : View
     {
-        $coupon = PromotionDiscount::paginate(10);
+        $coupon = PromotionDiscount::paginate(self::PER_PAGE_DEFAULT);
 
         // Send the function to view file
         $backgroundStatus = $this->getStatusStyle($coupon);
@@ -33,7 +33,7 @@ class PromotionDiscountController extends Controller
     */
     public function create() : View
     {
-        $event = PromotionEvent::paginate(5);
+        $event = PromotionEvent::paginate(self::PER_PAGE_COMPACT);
 
         return view('company.admin.promotion-discount.create', ['events' => $event]);
     }
