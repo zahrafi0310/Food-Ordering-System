@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\Public;
 
-use App\Enums\OrderStatusEnum;
 use App\Enums\ReservationStatusEnum;
+use App\Exceptions\OrderException;
 use App\Http\Controllers\Controller;
-use App\Models\CustomerOrder;
-use App\Models\CustomerOrderDetail;
-use App\Models\DiningTable;
 use App\Models\FoodCategory;
 use App\Models\FoodMenu;
 use App\Models\PromotionDiscount;
 use App\Models\PromotionEvent;
 use App\Models\Reservation;
+use App\Services\OrderService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -23,6 +21,10 @@ use Illuminate\View\View;
 
 class PublicController extends Controller
 {
+    public function __construct(private OrderService $orderService)
+    {
+    }
+
     public function home() : View
     {
         $menu = FoodMenu::all();
@@ -142,65 +144,22 @@ class PublicController extends Controller
     */
     public function createOrder(Request $request) : JsonResponse
     {
-        // Retrieve the JSON data from the request
-        $cartItem = $request->input('cartData');
-        $totalPrice = $request->input('totalAmount');
+        $contact = $request->filled('customer_contact')
+            ? $request->input('customer_contact')
+            : null;
 
-        // Get table number input
-        $tableNumber = $request->input('table_number');
-
-        // Initialize contact as null
-        $contact = null;
-
-        // Check if contact field is filled
-        if ($request->filled('customer_contact')) {
-            $contact = $request->input('customer_contact');
-            //dd($contact);
-        }
-
-        // Get table record
-        $table = DiningTable::where('table_name', $tableNumber)->first();
-
-        // If table not exists
-        if (!$table) {
+        try {
+            $this->orderService->createOrder(
+                $request->input('table_number'),
+                $request->input('cartData', []),
+                $request->input('totalAmount'),
+                $contact
+            );
+        } catch (OrderException $e) {
             return response()->json([
-                'validation-error-message' => 'Table does not exists. Plese enter a correct table number.',
+                'validation-error-message' => $e->getMessage(),
             ], 422);
         }
-
-        // If table is occupied
-        if ($table->isOccupied) {
-            return response()->json([
-                'validation-error-message' => 'Table is taken. Please enter another table number.',
-            ], 422);
-        }
-
-        // Table exists and table is not accupied then update isOccupied to true
-        $table->update(['isOccupied' => true]);
-
-        // Create order
-        $order = CustomerOrder::create([
-            'dining_table_id' => $table->id,
-            'order_total_price' => $totalPrice,
-            'isPaid' => false,
-            'order_status' => OrderStatusEnum::Preparing,
-            'customer_contact' => $contact,
-        ]);
-
-        // Get order id
-        $orderId = $order->id;
-
-        foreach ($cartItem as $item) {
-            // Create order details
-            $orderDetails = CustomerOrderDetail::create([
-                'order_id' => $orderId,
-                'food_id' => $item['id'],
-                'quantity' => $item['quantity'],
-                'total_price' => $item['eachTotalPrice'],
-            ]);
-        }
-
-        Log::info([$table, $order, $orderDetails]);
 
         return response()->json([
             'success-message' => 'Your order is being processed. Please wait 15 - 30 minutes for us to prepare your food.',
