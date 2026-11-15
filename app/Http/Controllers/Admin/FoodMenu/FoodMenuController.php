@@ -162,22 +162,14 @@ class FoodMenuController extends Controller
 
         if ($request->anyFilled(['name', 'description', 'price', 'category', 'image'])) {
 
-            $updateData = [];
-
-            if ($request->filled('name')) {
-                $updateData['name'] = $request->input('name');
-            }
+            $updateData = $this->getFilledData($request, [
+                'name',
+                'price',
+                'category',
+            ]);
 
             if ($request->filled('description')) {
                 $updateData['description'] = $request->input('description') . " " . $request->input('description-two');
-            }
-
-            if ($request->filled('price')) {
-                $updateData['price'] = $request->input('price');
-            }
-
-            if ($request->filled('category')) {
-                $updateData['category'] = $request->input('category');
             }
 
             if ($request->hasFile('image')) {

@@ -107,21 +107,15 @@ class PartnershipController extends Controller
                 $updateData['image'] = $imagePath;
             }
 
-            if ($request->filled('company_name')) {
-                $updateData['company_name'] = $request->input('company_name');
-            }
-
-            if ($request->filled('owner_name')) {
-                $updateData['owner_name'] = $request->input('owner_name');
-            }
-
-            if ($request->filled('date')) {
-                $updateData['date'] = $request->input('date');
-            }
-
-            if ($request->filled('location')) {
-                $updateData['location'] = $request->input('location');
-            }
+            $updateData = array_merge(
+                $updateData,
+                $this->getFilledData($request, [
+                    'company_name',
+                    'owner_name',
+                    'date',
+                    'location',
+                ])
+            );
 
             $updated = $partner->update($updateData);
 

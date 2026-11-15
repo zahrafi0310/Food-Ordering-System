@@ -33,19 +33,11 @@ class AdminProfileController extends Controller
 
         if ($request->anyFilled(['name', 'email', 'phone'])) {
 
-            $updateData = [];
-
-            if ($request->filled('name')) {
-                $updateData['name'] = $request->input('name');
-            }
-
-            if ($request->filled('email')) {
-                $updateData['email'] = $request->input('email');
-            }
-
-            if ($request->filled('phone')) {
-                $updateData['phone'] = $request->input('phone');
-            }
+            $updateData = $this->getFilledData($request, [
+                'name',
+                'email',
+                'phone',
+            ]);
 
             $updated = $user->update($updateData);
 

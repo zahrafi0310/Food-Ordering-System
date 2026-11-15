@@ -117,23 +117,12 @@ class PromotionDiscountController extends Controller
 
         if ($request->anyFilled(['name', 'discount', 'status', 'cateory_id'])) {
 
-            $updateData = [];
-
-            if ($request->filled('name')) {
-                $updateData['name'] = $request->input('name');
-            }
-
-            if ($request->filled('discount')) {
-                $updateData['discount'] = $request->input('discount');
-            }
-
-            if ($request->filled('status')) {
-                $updateData['status'] = $request->input('status');
-            }
-
-            if ($request->filled('category_id')) {
-                $updateData['category_id'] = $request->input('category_id');
-            }
+            $updateData = $this->getFilledData($request, [
+                'name',
+                'discount',
+                'status',
+                'category_id',
+            ]);
 
             $updated = $promotion->update($updateData);
 

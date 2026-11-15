@@ -51,31 +51,14 @@ class StaffProfileController extends Controller
 
         if ($request->anyFilled(['profile_name', 'profile_email', 'profile_phone', 'profile_address', 'profile_position', 'profile_gender', 'profile_image'])) {
             
-            $updateData = [];
-
-            if ($request->filled('profile_name')) {
-                $updateData['profile_name'] = $request->input('profile_name');
-            }
-
-            if ($request->filled('profile_email')) {
-                $updateData['profile_email'] = $request->input('profile_email');
-            }
-
-            if ($request->filled('profile_phone')) {
-                $updateData['profile_phone'] = $request->input('profile_phone');
-            }
-
-            if ($request->filled('profile_address')) {
-                $updateData['profile_address'] = $request->input('profile_address');
-            }
-
-            if ($request->filled('profile_position')) {
-                $updateData['profile_position'] = $request->input('profile_position');
-            }
-
-            if ($request->filled('profile_gender')) {
-                $updateData['profile_gender'] = $request->input('profile_gender');
-            }
+            $updateData = $this->getFilledData($request, [
+                'profile_name',
+                'profile_email',
+                'profile_phone',
+                'profile_address',
+                'profile_position',
+                'profile_gender',
+            ]);
 
             if ($request->hasFile('profile_image')) {
 

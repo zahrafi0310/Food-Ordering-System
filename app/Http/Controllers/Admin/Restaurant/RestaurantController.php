@@ -108,23 +108,12 @@ class RestaurantController extends Controller
 
         if ($request->anyFilled(['item_name', 'quntity', 'category', 'price'])) {
 
-            $updateData = [];
-
-            if ($request->filled('item_name')) {
-                $updateData['item_name'] = $request->input('item_name');
-            }
-
-            if ($request->filled('quantity')) {
-                $updateData['quantity'] = $request->input('quantity');
-            }
-
-            if ($request->filled('category')) {
-                $updateData['category'] = $request->input('category');
-            }
-
-            if ($request->filled('price')) {
-                $updateData['price'] = $request->input('price');
-            }
+            $updateData = $this->getFilledData($request, [
+                'item_name',
+                'quantity',
+                'category',
+                'price',
+            ]);
 
             $updated = $item->update($updateData);
 
