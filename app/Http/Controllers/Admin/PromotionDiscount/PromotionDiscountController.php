@@ -25,9 +25,6 @@ class PromotionDiscountController extends Controller
         return view('company.admin.promotion-discount.index', ['coupons' => $coupon, 'status' => $backgroundStatus]);
     }
 
-
-
-
     /*
     *  Function to view create file
     */
@@ -37,9 +34,6 @@ class PromotionDiscountController extends Controller
 
         return view('company.admin.promotion-discount.create', ['events' => $event]);
     }
-
-
-
 
     /*
     *  Function to store data into promotion_discounts table
@@ -71,10 +65,6 @@ class PromotionDiscountController extends Controller
         return back()->with('success-message', 'Coupon created successfully.');
     }
 
-
-
-
-
     /*
     *  Function to view show file
     */
@@ -84,10 +74,6 @@ class PromotionDiscountController extends Controller
 
         return view('company.admin.promotion-discount.show', ['coupons' => $promotion]);
     }
-
-
-
-
 
     /*
     *  Function to view edit file
@@ -105,11 +91,8 @@ class PromotionDiscountController extends Controller
         return view('company.admin.promotion-discount.edit', ['promotion' => $promotion, 'event' => $event]);
     }
 
-
-
-
     /*
-    *  Funtion to update promotion discount resource
+    *  Function to update promotion discount resource
     */
     public function update(Request $request, $id) : RedirectResponse
     {
@@ -136,10 +119,6 @@ class PromotionDiscountController extends Controller
             ]);
         }
     }
-
-
-
-
 
     /*
     *  Function to customize style css of redeem status field
@@ -173,3 +152,4 @@ class PromotionDiscountController extends Controller
         return implode(';', $styling);
     }
 }
+

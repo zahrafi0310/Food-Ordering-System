@@ -25,11 +25,8 @@ class FoodMenuController extends Controller
         return view('company.admin.food-menu.index', ['food' => $food]);
     }
 
-
-
-
     /*
-    *  Funtion to view create file
+    *  Function to view create file
     */
     public function create() : View
     {
@@ -38,14 +35,10 @@ class FoodMenuController extends Controller
         return view('company.admin.food-menu.create', ['newCategory' => $newCategory]);
     }
 
-
-
-
-
     /*
     *  Function to search resource in index page
     */
-    public function search_index(Request $request) : View
+    public function searchIndex(Request $request) : View
     {
         $keyword = $request->input('search');
 
@@ -64,15 +57,12 @@ class FoodMenuController extends Controller
         return view('company.admin.food-menu.index', ['food' => $search]);
     }
 
-
-
-
     
 
     /*
     *  Function to search reasource in create page
     */
-    public function search_create(Request $request) : View
+    public function searchCreate(Request $request) : View
     {
         $keyword = $request->input('search');
 
@@ -90,7 +80,6 @@ class FoodMenuController extends Controller
 
         return view('company.admin.food-menu.create', ['newCategory' => $search]);
     }
-
 
     
 
@@ -126,9 +115,6 @@ class FoodMenuController extends Controller
         return back()->with('success-message', 'Menu added successfully.');
     }
 
-
-
-
     /*
     *  Function view show file
     */
@@ -138,8 +124,6 @@ class FoodMenuController extends Controller
 
         return view('company.admin.food-menu.show', ['menu' => $menu]);
     }
-
-
 
     
     /*
@@ -159,7 +143,6 @@ class FoodMenuController extends Controller
     }
 
     
-
 
     /*
     *  Function to update food menu resource
@@ -200,8 +183,6 @@ class FoodMenuController extends Controller
         }
     }
 
-
-
     
     /*
     *  Function to delete food menu resource
@@ -219,3 +200,4 @@ class FoodMenuController extends Controller
         return redirect()->route('food-menu')->with('success-message', 'Menu is deleted successfully.');
     }
 }
+

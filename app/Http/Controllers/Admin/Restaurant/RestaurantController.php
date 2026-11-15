@@ -20,8 +20,6 @@ class RestaurantController extends Controller
         return view('company.admin.restaurant.index', ['restaurantItems' => $restaurantItems]);
     }
 
-
-
     /*
     *  Functio to view create file
     */
@@ -31,9 +29,6 @@ class RestaurantController extends Controller
 
         return view('company.admin.restaurant.create', ['itemCategory' => $itemCategory]);
     }
-
-
-
 
     /*
     *  Function to store data into restaurant item table
@@ -63,9 +58,6 @@ class RestaurantController extends Controller
         return back()->with('success-message', 'Item added successfully.');
     }
 
-
-
-
     /*
     *  Function view show file
     */
@@ -75,9 +67,6 @@ class RestaurantController extends Controller
 
         return view('company.admin.restaurant.show', ['item' => $item]);
     }
-
-
-
 
     /*
     *  Function to view edit file
@@ -94,10 +83,6 @@ class RestaurantController extends Controller
 
         return view('company.admin.restaurant.edit', ['item' => $item, 'category' => $itemCategory]);
     }
-
-
-
-
 
     /*
     *  Function to update restaurant item resource
@@ -127,9 +112,6 @@ class RestaurantController extends Controller
             ]);
         }
     }
-
-
-
 
     /*
     *  Function to delete restaurant item resource

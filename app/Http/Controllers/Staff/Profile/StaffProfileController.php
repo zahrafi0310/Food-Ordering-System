@@ -23,10 +23,6 @@ class StaffProfileController extends Controller
         return view('company.staff.profile.show', ['user' => $user]);
     }
 
-
-
-
-
     /*
     *  Function to view edit file
     */
@@ -36,9 +32,6 @@ class StaffProfileController extends Controller
 
         return view('company.staff.profile.edit', ['user' => $user]);
     }
-
-
-
 
     
 

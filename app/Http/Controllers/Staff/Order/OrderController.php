@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
-class OrderControler extends Controller
+class OrderController extends Controller
 {
     public function index() : View
     {
@@ -28,7 +28,7 @@ class OrderControler extends Controller
 
 
     /*
-    *  Funtion to view create file
+    *  Function to view create file
     */
     public function create() : View
     {

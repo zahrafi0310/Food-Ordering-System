@@ -28,7 +28,7 @@ class StaffAccountController extends Controller
     /*
     *  Function to search resource in index page
     */
-    public function search_index(Request $request) : View
+    public function searchIndex(Request $request) : View
     {
         $keyword = $request->input('search');
 
@@ -67,7 +67,7 @@ class StaffAccountController extends Controller
     /*
     *  Function to search resource in create page
     */
-    public function search_create(Request $request) : View
+    public function searchCreate(Request $request) : View
     {
         $keyword = $request->input('search');
 

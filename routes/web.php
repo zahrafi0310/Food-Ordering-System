@@ -14,7 +14,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Public\PublicController;
-use App\Http\Controllers\Staff\Order\OrderControler;
+use App\Http\Controllers\Staff\Order\OrderController;
 use App\Http\Controllers\Staff\Profile\StaffProfileController;
 use App\Http\Controllers\Staff\Reservation\ReservationController;
 use App\Http\Controllers\Staff\StaffController;
@@ -75,8 +75,8 @@ Route::prefix('admin')->middleware('auth', 'isAdmin')->group(function () {
     ]);
 
     // Route for search in staff account module
-    Route::get('/staff-search-index', [StaffAccountController::class, 'search_index'])->name('staff-account-search-index');
-    Route::get('/staff-search-create', [StaffAccountController::class, 'search_create'])->name('staff-account-search-create');
+    Route::get('/staff-search-index', [StaffAccountController::class, 'searchIndex'])->name('staff-account-search-index');
+    Route::get('/staff-search-create', [StaffAccountController::class, 'searchCreate'])->name('staff-account-search-create');
 
     // Food menu module
     Route::resource('/food-menu', FoodMenuController::class)->names([
@@ -88,8 +88,8 @@ Route::prefix('admin')->middleware('auth', 'isAdmin')->group(function () {
 
     Route::post('/food-menu/create', [FoodCategoryController::class, 'store'])->name('food-category');
     Route::delete('/food-category-delete/{id}', [FoodCategoryController::class, 'destroy'])->name('food-category-delete');
-    Route::get('/food-search-index', [FoodMenuController::class, 'search_index'])->name('food-menu-search-index');
-    Route::get('/food-search-create', [FoodMenuController::class, 'search_create'])->name('food-menu-search-create');
+    Route::get('/food-search-index', [FoodMenuController::class, 'searchIndex'])->name('food-menu-search-index');
+    Route::get('/food-search-create', [FoodMenuController::class, 'searchCreate'])->name('food-menu-search-create');
 
     // Restaurant module
     Route::resource('/restaurant', RestaurantController::class)->names([
@@ -136,14 +136,14 @@ Route::prefix('staff')->middleware('auth', 'isStaff')->group(function () {
     ]);
 
     // Order module
-    Route::resource('/customer-order', OrderControler::class)->names([
+    Route::resource('/customer-order', OrderController::class)->names([
         'index' => 'customer-order',
         'create' => 'customer-order-create',
         'show' => 'customer-order-show',      // Not used yet
         'edit' => 'customer-order-edit',      // Not used yet
     ]);
 
-    Route::put('/customer-order/update-order/{id}', [OrderControler::class, 'updateStatus'])->name('update-order');
+    Route::put('/customer-order/update-order/{id}', [OrderController::class, 'updateStatus'])->name('update-order');
 
 
     // Reservation module

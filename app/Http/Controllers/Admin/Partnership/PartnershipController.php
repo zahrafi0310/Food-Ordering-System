@@ -24,10 +24,6 @@ class PartnershipController extends Controller
         return view('company.admin.partnership.index', ['partner' => $partner]);
     }
 
-
-
-
-
     /*
     *  Function to view create file
     */
@@ -35,9 +31,6 @@ class PartnershipController extends Controller
     {
         return view('company.admin.partnership.create');
     }
-
-
-
 
     /*
     *  Function to store data into partnership table
@@ -71,9 +64,6 @@ class PartnershipController extends Controller
         return back()->with('success-message', 'Partner added successfully.');
     }
 
-
-
-
     /*
     *  Function to view edit file
     */
@@ -85,9 +75,6 @@ class PartnershipController extends Controller
 
         return view('company.admin.partnership.edit', ['partner' => $partner]);
     }
-
-
-
 
     /*
     *  Function to update partnership resource
@@ -129,8 +116,6 @@ class PartnershipController extends Controller
             ]);
         }
     }
-
-
 
     public function destroy($id) : RedirectResponse
     {
