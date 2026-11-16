@@ -26,7 +26,7 @@ class StaffAccountController extends Controller
 
 
     /*
-    *  Function to search resource in index page
+    * Function to search resource in index page
     */
     public function searchIndex(Request $request) : View
     {
@@ -65,7 +65,7 @@ class StaffAccountController extends Controller
 
 
     /*
-    *  Function to search resource in create page
+    * Function to search resource in create page
     */
     public function searchCreate(Request $request) : View
     {
@@ -156,54 +156,42 @@ class StaffAccountController extends Controller
 
 
     /*
-    *  Function to update staff account data
+    * Function to update staff account data
     */
     public function update(Request $request, $id) : RedirectResponse
     {
         $user = User::findOrFail($id);
 
-        if ($request->anyFilled(['name', 'email', 'phone', 'position', 'address'])) {
+        $updateData = $this->getFilled(
+            $request,
+            [
+                'name',
+                'email',
+                'phone',
+                'position',
+                'address',
+            ]
+        );
 
-            $updateData = [];
-
-            if ($request->filled('name')) {
-                $updateData['name'] = $request->input('name');
-            }
-
-            if ($request->filled('email')) {
-                $updateData['email'] = $request->input('email');
-            }
-
-            if ($request->filled('phone')) {
-                $updateData['phone'] = $request->input('phone');
-            }
-
-            if ($request->filled('position')) {
-                $updateData['position'] = $request->input('position');
-            }
-
-            if ($request->filled('address')) {
-                $updateData['address'] = $request->input('address');
-            }
-
+        if (!empty($updateData)) {
             $updated = $user->update($updateData);
 
             Log::info([$updateData, $updated]);
 
-            return redirect()->route('staff-account-show', $user->id)->with('success-message', 'Your changes are saved successfully.');
+            return redirect()->route('staff-account-show', $user->id)
+                ->with('success-message', 'Your changes are saved successfully.');
         }
-        else {
-            return back()->withErrors([
-                'error-message' => 'Please insert data to update staff details.'
-            ]);
-        }
+
+        return back()->withErrors([
+            'error-message' => 'Please insert data to update staff details.'
+        ]);
     }
 
 
 
 
     /*
-    *  Function to delete staff data
+    * Function to delete staff data
     */
     public function destroy($id) : RedirectResponse
     {
@@ -213,6 +201,7 @@ class StaffAccountController extends Controller
 
         Log::info([$staff]);
 
-        return redirect()->route('staff-account')->with('success-message', 'Staff is deleted successfully.');
+        return redirect()->route('staff-account')
+            ->with('success-message', 'Staff is deleted successfully.');
     }
 }
